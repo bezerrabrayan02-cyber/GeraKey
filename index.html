@@ -3,32 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Key para MOD</title>
+    <title>Gerador de Key - MOD</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
-        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
-        #key-display { font-size: 1.5rem; font-weight: bold; color: #333; margin: 20px 0; padding: 10px; border: 2px dashed #ccc; background: #eee; }
-        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-        button:hover { background: #0056b3; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background-color: #121212; 
+            color: white;
+            margin: 0; 
+        }
+        .container { 
+            background: #1e1e1e; 
+            padding: 2.5rem; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            text-align: center; 
+            width: 90%;
+            max-width: 400px;
+        }
+        h2 { margin-bottom: 20px; color: #007bff; }
+        #key-display { 
+            font-size: 1.4rem; 
+            font-weight: bold; 
+            letter-spacing: 2px;
+            color: #ffffff; 
+            margin: 25px 0; 
+            padding: 15px; 
+            border: 2px solid #333; 
+            background: #252525;
+            border-radius: 8px;
+        }
+        .btn-copiar { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            transition: 0.3s;
+            width: 100%;
+        }
+        .btn-copiar:hover { background: #0056b3; }
+        .msg-sucesso {
+            display: none;
+            margin-top: 20px;
+            color: #4bb543;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
     </style>
 </head>
-<body>
+<body onload="gerarKeyAutomatica()">
 
 <div class="container">
-    <h2>Gerador de Key Aleatória</h2>
-    <div id="key-display">CLIQUE PARA GERAR</div>
-    <button onclick="gerarKey()">Gerar Nova Key</button>
+    <h2>Sua Chave de Acesso</h2>
+    <div id="key-display">Gerando...</div>
+    
+    <button class="btn-copiar" onclick="copiarKey()">Copiar Key</button>
+
+    <div id="mensagem" class="msg-sucesso">
+        Cópia concluída com sucesso.<br>
+        Feche o aplicativo. E aproveite sua chave de login.
+    </div>
 </div>
 
 <script>
-    function gerarKey(blocos = 4, tamanhoBloco = 4) {
+    // Função para gerar a Key assim que o site abre
+    function gerarKeyAutomatica() {
         const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let resultado = [];
+        const blocos = 4;
+        const tamanhoBloco = 4;
 
         for (let i = 0; i < blocos; i++) {
             let bloco = '';
             for (let j = 0; j < tamanhoBloco; j++) {
-                // Usa crypto.getRandomValues para garantir aleatoriedade real
                 const array = new Uint32Array(1);
                 window.crypto.getRandomValues(array);
                 bloco += caracteres[array[0] % caracteres.length];
@@ -37,6 +90,22 @@
         }
 
         document.getElementById('key-display').innerText = resultado.join('-');
+    }
+
+    // Função para copiar e mostrar a mensagem
+    function copiarKey() {
+        const texto = document.getElementById('key-display').innerText;
+        
+        navigator.clipboard.writeText(texto).then(() => {
+            // Mostra a mensagem de sucesso
+            document.getElementById('mensagem').style.display = 'block';
+            
+            // Opcional: Desabilitar o botão após copiar para evitar múltiplos cliques
+            const btn = document.querySelector('.btn-copiar');
+            btn.style.backgroundColor = '#333';
+            btn.innerText = 'Copiado!';
+            btn.disabled = true;
+        });
     }
 </script>
 
