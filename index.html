@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Key para MOD</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        #key-display { font-size: 1.5rem; font-weight: bold; color: #333; margin: 20px 0; padding: 10px; border: 2px dashed #ccc; background: #eee; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Gerador de Key Aleatória</h2>
+    <div id="key-display">CLIQUE PARA GERAR</div>
+    <button onclick="gerarKey()">Gerar Nova Key</button>
+</div>
+
+<script>
+    function gerarKey(blocos = 4, tamanhoBloco = 4) {
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let resultado = [];
+
+        for (let i = 0; i < blocos; i++) {
+            let bloco = '';
+            for (let j = 0; j < tamanhoBloco; j++) {
+                // Usa crypto.getRandomValues para garantir aleatoriedade real
+                const array = new Uint32Array(1);
+                window.crypto.getRandomValues(array);
+                bloco += caracteres[array[0] % caracteres.length];
+            }
+            resultado.push(bloco);
+        }
+
+        document.getElementById('key-display').innerText = resultado.join('-');
+    }
+</script>
+
+</body>
+</html>
